@@ -1,0 +1,86 @@
+{% extends 'employe/basic.html' %} 
+{% block content %}
+
+    <!-- BEGIN: Content-->
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper container-xxl p-0">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <!-- users list start -->
+            <section class="app-user-list">
+               
+            
+                <!-- list and filter start -->
+                <div class="card">
+                    
+                    <div class="card-body border-bottom">
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.tags == 'error' %}
+                            <div class="alert alert-danger" role="alert">
+                                {{message}}
+                            </div>
+                                {% else %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">
+                                {{message}}
+                            </div>
+                                {% endif %}
+                            {% endfor %}{% endif %}
+                        {% comment %} <h4 class="card-title">Search & Filter</h4> {% endcomment %}
+
+                        <div class="row">
+                            <div class="col-md-4 user_role">
+                              {% comment %} <form id="search001" method="get" >
+                              <select class="form-select" name="search" aria-label="Default select example">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                                <option selected> All</option>
+                              </select>
+                              <!-- <button class="btn btn-primary w-80 waves-effect waves-float waves-light" >Search</button> -->
+
+                            </form> {% endcomment %}
+                            </div>
+                            <div class="col-md-5 user_plan">
+                              {% comment %} <button id="searchbtn001" class="btn btn-primary w-80 waves-effect waves-float waves-light" >Filter</button> {% endcomment %}
+                            </div>
+                            <div class="col-md-3 user_status">
+                                <a href="{% url 'employe:leave_apply' %}"><button class="btn btn-primary w-80 waves-effect waves-float waves-light" >Apply Leave</button></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-datatable table-responsive pt-0">
+                        <table class="user-list-table table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th></th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Leave from </th>
+                                    <th>Leave to</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{i.user.first_name}}</td>
+                                    <td>{{i.user.last_name}}</td>
+                                    <td>{{i.start_date}}</td>
+                                    <td>{{i.end_date}}</td>
+                                    <td>{{i.status}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- list and filter end -->
+            </section>
+            <!-- users list ends -->
+
+        </div>
+    </div>
+{% endblock %}

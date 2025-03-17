@@ -1,0 +1,130 @@
+{% extends 'customadmin/basic.html' %} 
+{% block content %}
+{% load tz %}
+
+    <div class="content-overlay"></div>
+    <div class="header-navbar-shadow"></div>
+    <div class="content-wrapper container-xxl p-0">
+        <div class="content-header row">
+        </div>
+        <div class="content-body">
+            <!-- users list start -->
+            <section class="app-user-list">
+               
+                <div class="card">
+                        
+                    <div class="card-body border-bottom">
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.tags == 'error' %}
+                            <div class="alert alert-danger" role="alert">
+                                {{message}}
+                            </div>
+                                {% else %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">
+                                {{message}}
+                            </div>
+                                {% endif %}
+                            {% endfor %}{% endif %}
+                        <h3 class="card-title">user: {{user.first_name}} {{user.last_name}}</h3>
+                        <h4 class="card-title">Attendance: {{month_name|date:"Y F"}}</h4>
+                        <div class="row">
+                            <div class="col-md-4 user_role">
+                                <form id="filterdate001" method="get" >
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <select name="select_year" id="year" class="form-control">
+                                            {% for year in years %}
+                                                <option value="{{ year }}" {% if year == current_year %}selected{% endif %}>
+                                                    {{ year }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6" style="padding-left: 7px;">
+                                        <select name="select_month" id="month" class="form-control">
+                                            {% for month, month_name in months %}
+                                                <option value="{{ month }}" {% if month == current_month|stringformat:"s" %}selected{% endif %}>
+                                                    {{ month_name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2" style="padding-left: 8px;">                              
+                                        <button id="filterdatebtn001" class="btn btn-primary w-80 waves-effect waves-float waves-light" >Filter</button>
+                                    </div>
+                                </div>
+                            </form>
+                            </div>
+                            <div class="col-md-6 user_plan">
+                              {% comment %} <button id="filterdatebtn001" class="btn btn-primary w-80 waves-effect waves-float waves-light" >Filter</button> {% endcomment %}
+                            </div>
+                            {% comment %} <div class="col-md-2 user_status">
+                                <a href="{% url 'customadmin:user_create' %}"><button class="btn btn-primary w-80 waves-effect waves-float waves-light" >Add User</button></a>
+                            </div> {% endcomment %}
+                        </div>
+                    </div>
+                    <div class="card-datatable table-responsive pt-0">
+                        <table class="user-list-table table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>date</th>
+                                    <th>Attendance</th>
+                                    <th>Punch In</th>
+                                    <th>Punch Out</th>
+                                    <th>Working hours</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in attendance_report %}
+                                <tr>
+                                    <td>{{i.date}}</td>
+                                    <td>{{i.attendance}}</td>
+                                    <td>{% if i.check_in_time %}{{i.check_in_time }}{% else %}------{% endif %}</td>
+                                    <td>{% if i.check_out_time %}{{i.check_out_time}}{% else %}-------{% endif %}</td>
+                                    <td>{% if i.total_working_time %}{{i.total_working_time}} Hours{% else %}0.0 Hours{% endif %}</td>
+                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            
+            </section>
+            <!-- users list ends -->
+    
+        </div>
+    </div>
+{% endblock %}
+{% block scriptjs %}
+<script>
+    document.getElementById('filterdatebtn001').addEventListener('click', function() {
+        document.getElementById('filterdate001').submit();
+    });
+  </script>
+<script>
+    function updateClock() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+        
+        // Add leading zero if time is less than 10
+        hours = hours < 10 ? '0' + hours : hours;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+        
+        var timeString = hours + ':' + minutes + ':' + seconds;
+        
+        // Display the time in the clock div
+        document.getElementById('clock').textContent = timeString;
+    }
+
+    // Update clock every second
+    setInterval(updateClock, 1000);
+
+    // Initialize clock immediately
+    updateClock();
+</script>
+{% endblock scriptjs %}
