@@ -8,6 +8,7 @@ from .forms import LeaveApplicationForm
 from datetime import datetime
 import calendar
 from datetime import timedelta
+from users.email import apply_user_leave
 # Create your views here.
 
 def attendance_report(user,search_year,search_month):
@@ -167,6 +168,10 @@ def apply_leave(request):
             leave_application = form.save(commit=False)
             leave_application.user = request.user 
             leave_application.save()
+            print('leave app',leave_application,"id",leave_application.id)
+            superuser=CustomUser.objects.filter(is_superuser=True).first()
+            print('super user',superuser)
+            apply_user_leave(leave_application,superuser)
             messages.success(request, "Leave Applyed Successfully")
             return redirect('employe:leave')
     else:

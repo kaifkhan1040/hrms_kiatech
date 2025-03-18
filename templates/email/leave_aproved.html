@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Approval Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .footer {
+            font-size: 14px;
+            color: #777;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Leave Approved - {{obj.user}}</h2>
+        <p>Dear  {{obj.user}},</p>
+        <p>I hope this message finds you well.</p>
+        <p>We are pleased to inform you that your leave request from <strong>{{obj.start_date}}</strong> to <strong>{{obj.end_date}}</strong> has been approved.</p>
+        <p>During this period, you are granted leave as per your request. Please ensure that all necessary tasks are handed over to the appropriate colleague(s) before your leave begins.</p>
+        <p>If there are any urgent matters that arise during your absence, kindly ensure your availability via <strong>[email/phone]</strong> if needed.</p>
+        <p>We hope you have a restful and enjoyable time off.</p>
+        <p>If you need further assistance or have any concerns, please don't hesitate to contact us.</p>
+
+        <div class="footer">
+            <p>Best regards,</p>
+            {% comment %} <p><strong>[Your Name]</strong><br>
+            [Your Position]<br>
+            [Company Name]<br>
+            [Contact Information]</p> {% endcomment %}
+            {% comment %} <p><a href="mailto:[Your Email]">Contact Us</a></p> {% endcomment %}
+        </div>
+    </div>
+</body>
+</html>

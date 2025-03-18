@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #4CAF50;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .footer {
+            font-size: 14px;
+            color: #777;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Leave Application</h2>
+        <p>Dear {{superuser.first_name}} {{superuser.last_name}},</p>
+        <p>I hope this message finds you well.</p>
+        <p>I am writing to request leave for the period from <strong>{{obj.start_date}}</strong> to <strong>{{obj.end_date}}</strong> due to {{obj.leave_type}}.</p>
+        <p>Please let me know if you require any further information or documentation regarding my request. I will ensure that all my pending tasks are completed before my leave and will hand over any ongoing work to the designated colleague(s).</p>
+        <p>I would appreciate it if you could consider my request and inform me at your earliest convenience.</p>
+        <p>Thank you for your understanding and support.</p>
+
+        <div class="footer">
+            <p>Best regards,</p>
+            <p><strong>{{obj.user.first_name}} {{obj.user.last_name}} </strong><br>
+            KiaTech<br>
+            {{obj.user.email}}</p>
+            {% comment %} <p><a href="mailto:[Your Email]">Contact Me</a></p> {% endcomment %}
+        </div>
+    </div>
+</body>
+</html>
