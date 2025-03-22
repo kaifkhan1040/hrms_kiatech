@@ -107,12 +107,16 @@ DBBACKUP_STORAGE_OPTIONS = {'location': '/'}
 
 
 #email configure
-EMAIL_USE_TLS = True
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST_PASSWORD = ''
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = ''
-EMAIL_PORT = 587
+#gmail
+
+#outlook
+EMAIL_HOST = 'smtp.hostinger.com'  # SMTP server for Outlook
+EMAIL_PORT = 465  # Port used by Outlook for TLS
+# EMAIL_USE_TLS = True  # TLS encryption
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'Admin@thekiatech.com'  # Your Outlook email address
+EMAIL_HOST_PASSWORD = 'Rd1208@tech'  # Your Outlook password or App Password
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -157,7 +161,7 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 LOGIN_REDIRECT_URL = '/admin/'
 LOGOUT_REDIRECT_URL = '/user/'
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -165,3 +169,28 @@ AUTH_USER_MODEL = 'users.CustomUser'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#mysql setting
+'''
+user:root
+pass: Root@123kiatech
+'''
+
+#
+'''
+status : sudo supervisorctl status
+restart : sudo supervisorctl restart all
+'''
+
+#django conf
+'''
+
+ sudo service nginx restart
+ sudo service supervisor restart
+
+
+
+
+'''
+

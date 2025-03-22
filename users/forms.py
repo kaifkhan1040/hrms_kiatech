@@ -47,9 +47,18 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['email'].widget.attrs.update({'class': 'form-control'})
         self.fields['password1'].widget.attrs.update({'class': 'form-control'})
         self.fields['password2'].widget.attrs.update({'class': 'form-control'})
+        self.fields['image'].widget.attrs.update({'hidden': False,"id":'account-upload-form'})
     class Meta:
         model = CustomUser
-        fields = ('first_name', 'last_name','email','phone_number')
+        fields = ('first_name', 'last_name','email','phone_number','image','dob','doj')
+        widgets = {
+            'dob':DateInput(attrs={
+                'type': 'date',
+                'class': "form-control mb-2",}),
+            'doj':DateInput(attrs={
+                'type': 'date',
+                'class': "form-control mb-2",}),
+                }
 
 class UserProfileForm(ModelForm):
     country = forms.ChoiceField(choices=country_choices,required=False)
@@ -65,6 +74,8 @@ class UserProfileForm(ModelForm):
         self.fields['phone_number'].widget.attrs.update({'class': 'form-control','maxlength':10,'minlength':10})
         self.fields['address'].widget.attrs.update({'class': 'form-control'})
         self.fields['state'].widget.attrs.update({'class': 'form-control'})
+        self.fields['salary'].widget.attrs.update({'class': 'form-control'})
+        self.fields['designation'].widget.attrs.update({'class': 'form-control'})
         self.fields['zipcode'].widget.attrs.update({'class': 'form-control'})
         self.fields['image'].widget.attrs.update({'hidden': False,"id":'account-upload-form'})
         self.fields['country'].widget.attrs.update({'class': 'select2 form-select ','maxlength':8})
@@ -72,7 +83,15 @@ class UserProfileForm(ModelForm):
     class Meta:
             model = CustomUser
             fields = ('first_name', 'last_name','email','phone_number','address',
-            'state','zipcode','image')
+            'state','zipcode','image','salary','designation','dob','doj')
+            widgets = {
+            'dob':DateInput(attrs={
+                'type': 'date',
+                'class': "form-control mb-2",}),
+            'doj':DateInput(attrs={
+                'type': 'date',
+                'class': "form-control mb-2",}),
+                }
 
     # widgets = {
     #         'first_name': forms.TextInput(attrs={'class': 'form-control', 'id': 'accountFirstName'}),

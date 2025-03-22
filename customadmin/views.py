@@ -87,15 +87,19 @@ def createuser(request,user_id=None):
     if request.method=="POST":
         if user_id:
             user = get_object_or_404(CustomUser, id=user_id)
-            form = UserProfileForm(request.POST,instance=user)
+            form = UserProfileForm(request.POST,request.FILES,instance=user)
         else:
-            form=CustomUserCreationForm(request.POST,instance=user)
+            form=CustomUserCreationForm(request.POST,request.FILES,instance=user)
         email=request.POST.get('email')
+        designation=request.POST.get('designation')
+        salary=request.POST.get('salary')
         if form.is_valid():
             status=request.POST.get('status')
             print('sssssssssssssssssss',status)
             updated_user = form.save()
             updated_user.is_active=True if status=='1' else False
+            updated_user.designation=designation
+            updated_user.salary=salary
             updated_user.save()
             action = 'updated' if user else 'created'
             messages.success(request, f'User {updated_user.email} has been {action} successfully!')
@@ -103,7 +107,7 @@ def createuser(request,user_id=None):
         else:
             print('errrrrrrrr',form.errors)
             messages.error(request,form.errors)
-    return render(request,'customadmin/createuser.html',{'form':form,'user':user
+    return render(request,'customadmin/createuser.html',{'form':form,'user1':user
         })
 
 def leave_type(request):

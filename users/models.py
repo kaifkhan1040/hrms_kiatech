@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from .managers import CustomUserManager
 # from helpdesk.customadmin.models import Company
-
+import os
 
 class CustomUser(AbstractUser):
     status_choice=(
@@ -19,18 +19,21 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
-    # is_landload = models.BooleanField(default=0)
     status = models.CharField(choices=status_choice,max_length=100,default='watting')
     delete_status = models.BooleanField(default=0)
     # strpass = models.CharField(max_length=255)
     token = models.CharField(max_length=16)
-    # company=models.ForeignKey(Company,on_delete=models.CASCADE)
     phone_number=models.CharField(max_length=10,null=True,blank=True)
     image = models.ImageField(upload_to='user_profile/', null=True,blank=True)
     address = models.CharField(max_length=500,null=True,blank=True)
+    salary = models.CharField(max_length=500,null=True,blank=True)
+    designation = models.CharField(max_length=500,null=True,blank=True)
     state = models.CharField(max_length=100,null=True,blank=True)
     zipcode = models.CharField(max_length=8,null=True,blank=True)
     country = models.CharField(max_length=255,null=True,blank=True)
+    
+    dob = models.DateField(null=True,blank=True)
+    doj = models.DateField(null=True,blank=True)
 
     def __str__(self):
         return self.email
@@ -38,6 +41,18 @@ class CustomUser(AbstractUser):
     def delete(self, using=None, keep_parents=False):
         self.image.storage.delete(self.image.name)
         super().delete()
+        
+    def save(self, *args, **kwargs):
+        """ Delete old image when a new one is uploaded """
+        try:
+            old_user = CustomUser.objects.get(id=self.id)
+            if old_user.image and self.image and old_user.image != self.image:
+                if os.path.isfile(old_user.image.path):
+                    os.remove(old_user.image.path)
+        except CustomUser.DoesNotExist:
+            pass  
+
+        super().save(*args, **kwargs)
 
 
 class ForgetPassMailVerify(models.Model):

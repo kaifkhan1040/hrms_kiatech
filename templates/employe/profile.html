@@ -1,4 +1,4 @@
-{% extends 'customadmin/basic.html' %} 
+{% extends 'employe/basic.html' %} 
 {% load static %}
 
     {% block style %}
@@ -98,7 +98,7 @@
                                         <form class="form-validate" method="POST" enctype="multipart/form-data">
                                              <div class="d-flex">
                                                 <a href="#" class="me-25">
-                                                    <img src="{% if user1.image %}{{ user1.image.url }}{% else %}{% static 'app-assets/images/portrait/small/avatar-s-11.jpg' %}{% endif %}"
+                                                    <img src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'app-assets/images/portrait/small/avatar-s-11.jpg' %}{% endif %}"
                                                         id="account-upload-img" class="uploadedAvatar rounded me-50" 
                                                         alt="profile image" height="100" width="100" />
                                                 </a>
@@ -136,7 +136,7 @@
                                                                     {% comment %} {{form.image}} {% endcomment %}
                                                                 {% if user.is_superuser %} {{form.first_name}}
                                                                 {% else %}
-                                                                <input type="text" name="first_name" value='{{user1.first_name}}' readonly  class="form-control" placeholder="First name" value="" id="username" />
+                                                                <input type="text" name="first_name" value='{{user.first_name}}' readonly  class="form-control" placeholder="First name" value="" id="username" />
                                                                 {% endif %}     
                                                 </div>
                                             </div>
@@ -145,7 +145,7 @@
                                                     <label for="name">Last Name</label>
                                                     {% if user.is_superuser %} {{form.last_name}}
                                                     {% else %}
-                                                    <input type="text" name="last_name" value="{{user1.last_name}}" class="form-control" placeholder="Last Name" value="" id="name" readonly />
+                                                    <input type="text" name="last_name" value="{{user.last_name}}" class="form-control" placeholder="Last Name" value="" id="name" readonly />
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -154,7 +154,7 @@
                                                     <label for="email">E-mail</label>
                                                     {% if user.is_superuser %} {{form.email}}
                                                     {% else %}
-                                                    <input type="text" name="last_name" value="{{user1.email}}" class="form-control" placeholder="Email" value="" id="name" readonly />
+                                                    <input type="text" name="last_name" value="{{user.email}}" class="form-control" placeholder="Email" value="" id="name" readonly />
                                                     {% endif %}
                                                     
                                                     {% comment %} <input type="email" name="email" required class="form-control" placeholder="" value="" id="email" /> {% endcomment %}
@@ -179,7 +179,7 @@
                                                     {% if user.is_superuser %}
                                                     <input type="text" name="designation" {% if user1.designation %}value="{{user1.designation}}"{% endif %}required class="form-control" placeholder="designation" value="" id="email" />
                                                     {% else %}
-                                                    <input type="text" readonly name="designation" {% if user1.designation %}value="{{user1.designation}}"{% endif %}required class="form-control" placeholder="designation" value="" id="email" />
+                                                    <input type="text" readonly name="designation" {% if user.designation %}value="{{user.designation}}"{% endif %}required class="form-control" placeholder="designation" value="" id="email" />
 
                                                     {% endif %}
                                                 </div>
@@ -190,7 +190,7 @@
                                                     {% if user.is_superuser %}
                                                     <input type="text" name="salary" {% if user1.salary %}value="{{user1.salary}}"{% endif %}required class="form-control" placeholder="salary" value="" id="email" />
                                                     {% else %}
-                                                    <input type="text" readonly name="salary" {% if user1.salary %}value="{{user1.salary}}"{% endif %}required class="form-control" placeholder="salary" value="" id="email" />
+                                                    <input type="text" readonly name="salary" {% if user.salary %}value="{{user.salary}}"{% endif %}required class="form-control" placeholder="salary" value="" id="email" />
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -200,7 +200,7 @@
                                                     {% if user.is_superuser %}
                                                     {{form.dob}}
                                                     {% else %}
-                                                    <input type="date" readonly name="dob" class="form-control mb-2" id="id_dob">
+                                                    <input type="date" value="{{ user.dob|date:'Y-m-d' }}" readonly name="dob" class="form-control mb-2" id="id_dob">
                                                     {% endif %}
                                                     {% comment %} <input type="email" name="email" required class="form-control" placeholder="Email" value="" id="email" /> {% endcomment %}
                                                 </div>
@@ -210,7 +210,7 @@
                                                     {% if user.is_superuser %}
                                                     {{form.doj}}
                                                     {% else %}
-                                                    <input type="date" readonly name="doj" class="form-control mb-2" id="id_doj">
+                                                    <input type="date" value="{{ user.doj|date:'Y-m-d' }}" readonly name="doj" class="form-control mb-2" id="id_doj">
                                                     {% endif %}
                                                     {% comment %} <input type="email" name="email" required class="form-control" placeholder="Email" value="" id="email" /> {% endcomment %}
                                                 </div>

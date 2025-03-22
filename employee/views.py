@@ -179,3 +179,7 @@ def apply_leave(request):
     
     return render(request, 'employe/apply_leave.html', {'form': form})
 
+
+@login_required
+def profile(request):
+    return render(request, 'employe/profile.html', {'user': request.user})

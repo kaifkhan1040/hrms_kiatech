@@ -8,6 +8,7 @@ urlpatterns = [
     path('checkout', views.check_out, name='checkout'),
     path('leave', views.leave_list, name='leave'),
     path('leave/create', views.apply_leave, name='leave_apply'),
+    path('profile',views.profile,name='profile'),
 
     
     ]
